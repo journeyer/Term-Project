@@ -1,70 +1,70 @@
 import java.util.*;
 
 public class Player {
-    private HashSet<Cart> missingCharacterCarts;
-    private HashSet<Cart> missingRoomCarts;
-    private HashSet<Cart> missingPlaceCarts;
+    private HashSet<Card> missingCharacterCards;
+    private HashSet<Card> missingRoomCards;
+    private HashSet<Card> missingPlaceCards;
 
-    private HashSet<Cart> carts;
+    private HashSet<Card> cards;
     private int number;
 
-    public Player(List<Cart> carts, List<Cart> totalRoomCarts, List<Cart> totalPlaceCarts, List<Cart> totalCharacterCarts) {
-        this.carts = new HashSet<>(carts);
-        this.missingCharacterCarts = new HashSet<>(totalCharacterCarts);
-        this.missingCharacterCarts.removeAll(this.carts);
-        this.missingPlaceCarts = new HashSet<>(totalPlaceCarts);
-        this.missingPlaceCarts.removeAll(this.carts);
-        this.missingRoomCarts = new HashSet<>(totalRoomCarts);
-        this.missingRoomCarts.removeAll(this.carts);
+    public Player(List<Card> cards, List<Card> totalRoomCards, List<Card> totalPlaceCards, List<Card> totalCharacterCards) {
+        this.cards = new HashSet<>(cards);
+        this.missingCharacterCards = new HashSet<>(totalCharacterCards);
+        this.missingCharacterCards.removeAll(this.cards);
+        this.missingPlaceCards = new HashSet<>(totalPlaceCards);
+        this.missingPlaceCards.removeAll(this.cards);
+        this.missingRoomCards = new HashSet<>(totalRoomCards);
+        this.missingRoomCards.removeAll(this.cards);
     }
 
-    public Cart selectCharacter(List<Cart> characters) {
+    public Card selectCharacter(List<Card> characters) {
         Random random = new Random();
         return characters.get(random.nextInt(characters.size()));
     }
 
-    public Cart selectPlace(List<Cart> places) {
+    public Card selectPlace(List<Card> places) {
         Random random = new Random();
         return places.get(random.nextInt(places.size()));
     }
 
-    public int countOwnedCarts(Cart[] selectedCarts) {
+    public int countOwnedCards(Card[] selectedCards) {
         int count = 0;
-        for (Cart cart : selectedCarts) {
-            if (this.carts.contains(cart)) {
+        for (Card card : selectedCards) {
+            if (this.cards.contains(card)) {
                 count++;
             }
         }
         return count;
     }
 
-    public Cart[] guessCart(Cart selectedRoom, Cart selectedPlace, Cart selectedCharacter, List<Integer> ownedCartsCount) {
-        int totalOwnedCarts = 0;
-        for (Integer n : ownedCartsCount) {
-            totalOwnedCarts += n;
+    public Card[] guessCard(Card selectedRoom, Card selectedPlace, Card selectedCharacter, List<Integer> ownedCardsCount) {
+        int totalOwnedCards = 0;
+        for (Integer n : ownedCardsCount) {
+            totalOwnedCards += n;
         }
 
-        if (this.carts.contains(selectedRoom)) {
-            totalOwnedCarts++;           
+        if (this.cards.contains(selectedRoom)) {
+            totalOwnedCards++;           
         }
-        if (this.carts.contains(selectedPlace)) {
-            totalOwnedCarts++;           
+        if (this.cards.contains(selectedPlace)) {
+            totalOwnedCards++;           
         }
-        if (this.carts.contains(selectedCharacter)) {
-            totalOwnedCarts++;           
-        }
-
-        if (totalOwnedCarts == 3) {
-            this.missingRoomCarts.remove(selectedRoom);
-            this.missingPlaceCarts.remove(selectedPlace);
-            this.missingCharacterCarts.remove(selectedCharacter);
+        if (this.cards.contains(selectedCharacter)) {
+            totalOwnedCards++;           
         }
 
-        if (this.missingRoomCarts.size() == 1 && this.missingPlaceCarts.size() == 1 && this.missingCharacterCarts.size() == 1) {
-            return new Cart[]{this.missingRoomCarts.iterator().next(), this.missingPlaceCarts.iterator().next(), this.missingCharacterCarts.iterator().next()};
+        if (totalOwnedCards == 3) {
+            this.missingRoomCards.remove(selectedRoom);
+            this.missingPlaceCards.remove(selectedPlace);
+            this.missingCharacterCards.remove(selectedCharacter);
         }
 
-        return new Cart[]{};
+        if (this.missingRoomCards.size() == 1 && this.missingPlaceCards.size() == 1 && this.missingCharacterCards.size() == 1) {
+            return new Card[]{this.missingRoomCards.iterator().next(), this.missingPlaceCards.iterator().next(), this.missingCharacterCards.iterator().next()};
+        }
+
+        return new Card[]{};
     }
 
     public Integer selectDestination(ArrayList<Integer> allowedRoomNumbers) {

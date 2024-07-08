@@ -1,4 +1,4 @@
-public enum CartKind {
+public enum CardKind {
     CHARACTER,
     PLACE,
     ROOM,

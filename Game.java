@@ -6,39 +6,39 @@ public class Game {
     private HashSet<Player> failedPlayers = new HashSet<>();
     private int turn = 0;
 
-    private ArrayList<Cart> characterCarts = new ArrayList<>(List.of(
-        new Cart(CartKind.CHARACTER, 1),
-        new Cart(CartKind.CHARACTER, 2),
-        new Cart(CartKind.CHARACTER, 3),
-        new Cart(CartKind.CHARACTER, 4),
-        new Cart(CartKind.CHARACTER, 5),
-        new Cart(CartKind.CHARACTER, 6)
+    private ArrayList<Card> characterCards = new ArrayList<>(List.of(
+        new Card(CardKind.CHARACTER, 1),
+        new Card(CardKind.CHARACTER, 2),
+        new Card(CardKind.CHARACTER, 3),
+        new Card(CardKind.CHARACTER, 4),
+        new Card(CardKind.CHARACTER, 5),
+        new Card(CardKind.CHARACTER, 6)
     ));
 
-    private ArrayList<Cart> placeCarts = new ArrayList<>(List.of(
-        new Cart(CartKind.PLACE, 1),
-        new Cart(CartKind.PLACE, 2),
-        new Cart(CartKind.PLACE, 3),
-        new Cart(CartKind.PLACE, 4),
-        new Cart(CartKind.PLACE, 5),
-        new Cart(CartKind.PLACE, 6)
+    private ArrayList<Card> placeCards = new ArrayList<>(List.of(
+        new Card(CardKind.PLACE, 1),
+        new Card(CardKind.PLACE, 2),
+        new Card(CardKind.PLACE, 3),
+        new Card(CardKind.PLACE, 4),
+        new Card(CardKind.PLACE, 5),
+        new Card(CardKind.PLACE, 6)
     ));
 
-    private ArrayList<Cart> roomCarts = new ArrayList<>(List.of(
-        new Cart(CartKind.ROOM, 1),
-        new Cart(CartKind.ROOM, 2),
-        new Cart(CartKind.ROOM, 3),
-        new Cart(CartKind.ROOM, 4),
-        new Cart(CartKind.ROOM, 5),
-        new Cart(CartKind.ROOM, 6),
-        new Cart(CartKind.ROOM, 7),
-        new Cart(CartKind.ROOM, 8),
-        new Cart(CartKind.ROOM, 9)
+    private ArrayList<Card> roomCards = new ArrayList<>(List.of(
+        new Card(CardKind.ROOM, 1),
+        new Card(CardKind.ROOM, 2),
+        new Card(CardKind.ROOM, 3),
+        new Card(CardKind.ROOM, 4),
+        new Card(CardKind.ROOM, 5),
+        new Card(CardKind.ROOM, 6),
+        new Card(CardKind.ROOM, 7),
+        new Card(CardKind.ROOM, 8),
+        new Card(CardKind.ROOM, 9)
     ));
 
-    private Cart pickedRoomCart;
-    private Cart pickedCharacterCart;
-    private Cart pickedPlaceCart;
+    private Card pickedRoomCard;
+    private Card pickedCharacterCard;
+    private Card pickedPlaceCard;
     private Playground playground = new Playground();
 
     public Game(int numberOfPlayers) {
@@ -46,26 +46,26 @@ public class Game {
 
         Random random = new Random();
 
-        this.pickedRoomCart = this.roomCarts.get(random.nextInt(this.roomCarts.size()));
-        this.pickedPlaceCart = this.placeCarts.get(random.nextInt(this.placeCarts.size()));
-        this.pickedCharacterCart = this.characterCarts.get(random.nextInt(this.characterCarts.size()));
+        this.pickedRoomCard = this.roomCards.get(random.nextInt(this.roomCards.size()));
+        this.pickedPlaceCard = this.placeCards.get(random.nextInt(this.placeCards.size()));
+        this.pickedCharacterCard = this.characterCards.get(random.nextInt(this.characterCards.size()));
 
-        ArrayList<Cart> unassignedCarts = new ArrayList<>();
-        unassignedCarts.addAll(characterCarts);
-        unassignedCarts.remove(this.pickedCharacterCart);
-        unassignedCarts.addAll(placeCarts);
-        unassignedCarts.remove(this.pickedPlaceCart);
-        unassignedCarts.addAll(roomCarts);
-        unassignedCarts.remove(this.pickedRoomCart);
+        ArrayList<Card> unassignedCards = new ArrayList<>();
+        unassignedCards.addAll(characterCards);
+        unassignedCards.remove(this.pickedCharacterCard);
+        unassignedCards.addAll(placeCards);
+        unassignedCards.remove(this.pickedPlaceCard);
+        unassignedCards.addAll(roomCards);
+        unassignedCards.remove(this.pickedRoomCard);
 
         for (int i = 0; i < numberOfPlayers; i++) {
-            Cart[] assignedCarts = new Cart[9 - numberOfPlayers];
+            Card[] assignedCards = new Card[9 - numberOfPlayers];
             for (int j = 0; j < 9 - numberOfPlayers; j++) {
-                int x = random.nextInt(unassignedCarts.size());
-                assignedCarts[j] = unassignedCarts.get(x);
-                unassignedCarts.remove(x);
+                int x = random.nextInt(unassignedCards.size());
+                assignedCards[j] = unassignedCards.get(x);
+                unassignedCards.remove(x);
             }
-            this.players.add(new Player(Arrays.asList(assignedCarts), this.roomCarts, this.placeCarts, this.characterCarts));
+            this.players.add(new Player(Arrays.asList(assignedCards), this.roomCards, this.placeCards, this.characterCards));
         }
 
         for (Player player : this.players) {
@@ -78,9 +78,9 @@ public class Game {
 
         for (Player player : this.players) {
             int roomNumber = this.playground.getPlayerRoom(player);
-            Cart room = this.roomCarts.get(roomNumber-1);
-            Cart place = player.selectPlace(this.placeCarts);
-            Cart character = player.selectCharacter(this.characterCarts);
+            Card room = this.roomCards.get(roomNumber-1);
+            Card place = player.selectPlace(this.placeCards);
+            Card character = player.selectCharacter(this.characterCards);
 
             boolean finished = this.broadcastSelection(player, room, place, character);
             if (finished) {
@@ -109,11 +109,11 @@ public class Game {
         return false;
     }
 
-    private boolean broadcastSelection(Player fromPlayer, Cart room, Cart place, Cart character) {
+    private boolean broadcastSelection(Player fromPlayer, Card room, Card place, Card character) {
         ArrayList<Integer> counts = new ArrayList<>();
         for (Player player : this.players) {
             if (player != fromPlayer) {
-                counts.add(player.countOwnedCarts(new Cart[]{room, place, character}));
+                counts.add(player.countOwnedCards(new Card[]{room, place, character}));
             }
         }
 
@@ -129,9 +129,9 @@ public class Game {
             ArrayList<Integer> copy = new ArrayList<Integer>(counts);
             copy.remove(i++);
 
-            Cart[] guess = player.guessCart(room, place, character, copy);
+            Card[] guess = player.guessCard(room, place, character, copy);
             if (guess.length == 3) {
-                if (guess[0] == this.pickedRoomCart && guess[1] == this.pickedPlaceCart && guess[2] == this.pickedCharacterCart) {
+                if (guess[0] == this.pickedRoomCard && guess[1] == this.pickedPlaceCard && guess[2] == this.pickedCharacterCard) {
                     System.out.println("game finished in " + this.turn + " turns");
                 } else {
                     this.failedPlayers.add(player);
